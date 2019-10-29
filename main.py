@@ -1,5 +1,8 @@
+import os
 import discord
 import asyncio
+
+TOKEN = os.environ.get('TOKEN')
 
 client = discord.Client()
 
@@ -15,4 +18,4 @@ async def on_message(message):
 		await message.channel.send('Eu estou sendo desenvolvido, logo terei novas funções!')
 
 
-client.run('NjM4MjczODEyODI3MjA5NzM5.XbeHMA.6e6Dh73Ewy-Xcn_wCgznrPjUv_s')
+client.run(TOKEN)
