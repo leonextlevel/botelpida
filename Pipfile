@@ -7,6 +7,7 @@ verify_ssl = true
 
 [packages]
 discord-py = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.8"
