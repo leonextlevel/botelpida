@@ -2,7 +2,6 @@ import os
 import discord
 import asyncio
 # import psycopg2
-from random import randint
 
 from funcoes.rolagem import criar_roll
 

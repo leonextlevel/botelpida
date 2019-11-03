@@ -1,3 +1,6 @@
+from random import randint
+
+
 # Imprimir Resultado
 # Recebe uma lista de com os valores de rolagens e opcionalmente uma com rolagens extras.
 # Retrona uma string formatada com os resultados dessas rolagens.
@@ -11,6 +14,7 @@ def imprime_resultado(rolagens, dados, extras=[]):
 **Extras:** {extras}
 
 :white_check_mark:  Sucessos: {sucessos}    :no_entry:  Falhas: {falhas}'''
+
     return f'''**ROLANDO {dados}D10**
 Resultados: {rolagens}
 
