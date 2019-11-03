@@ -4,6 +4,7 @@ import asyncio
 # import psycopg2
 
 from funcoes.rolagem import criar_roll
+from funcoes.utils import comandos, ajuda
 
 # Variaveis com os valores das varieveis de ambiente informados
 # Utilizado para manter as informações em um lugar mais seguro
@@ -27,7 +28,7 @@ async def on_ready():
 @client.event
 async def on_message(message):
     if message.content.lower().startswith('/help'):
-        await message.channel.send('Eu estou sendo desenvolvido, logo terei novas funções!')
+        await message.channel.send(ajuda(message.author.name))
     if message.content.lower().startswith('/roll'):
         try:
             await message.channel.send(criar_roll(message))
@@ -36,7 +37,8 @@ async def on_message(message):
                 ":robot: **BOT**\n\n"
                 ":speech_balloon: Fui projetado para não ser burro igual você!"
             )
-
+    if message.content.lower().startswith('/comandos'):
+        await message.channel.send(comandos())
 
 # Starta o bot com o Token informado
 client.run(TOKEN)
