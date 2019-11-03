@@ -26,7 +26,7 @@ Resultados: {rolagens}
 # Retrona uma string com uma mensagem informando o sucesso da rolagem
 def criar_roll(message):
     dados = int(message.content.lower().split()[1])
-    if dados <= 15:
+    if dados > 0 and dados <= 15:
         rolagens = []
         extras = []
         ver_ultima_rolagem = True
@@ -52,5 +52,5 @@ def criar_roll(message):
         return imprime_resultado(rolagens, dados=dados)
     return (
         ":robot: BOT\n\n"
-        ":speech_balloon: Você não precisa disso tudo. ACREDITE! Tente com no máximo 15 :wink:"
+        ":speech_balloon: Valor fora dos meus limites! Tente com valores de 1 a 15 :wink:"
     )
