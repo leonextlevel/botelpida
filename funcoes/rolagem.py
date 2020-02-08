@@ -1,56 +1,73 @@
 from random import randint
 
 
-# Imprimir Resultado
-# Recebe uma lista de com os valores de rolagens e opcionalmente uma com rolagens extras.
-# Retrona uma string formatada com os resultados dessas rolagens.
-def imprime_resultado(rolagens, dados, extras=[]):
-    sucessos = sum(map(lambda x: x > 5, rolagens + extras))
-    falhas = sum(map(lambda x: x <= 5, rolagens + extras))
-    saida = ''
-    if extras:
-        return f'''**ROLANDO {dados}D10**
-**Resultados:** {rolagens}
-**Extras:** {extras}
+class Roll:
+    num_lados = 10
+    explosao = True
 
-:white_check_mark:  Sucessos: {sucessos}    :no_entry:  Falhas: {falhas}'''
+    def __init__(self, num_dados):
+        self.num_dados = num_dados
+        self.resultados = []
+        self.resultados_extra = []
 
-    return f'''**ROLANDO {dados}D10**
-Resultados: {rolagens}
+    def valida_num_dados(self):
+        '''
+            Valida se a quantidade de dados rolados está dentro do limite e
+            se é um valor válido.
+        '''
+        if isinstance(self.num_dados, int):
+            if self.num_dados > 0 and self.num_dados <= 15:
+                return True
+        return False
 
-:white_check_mark:  Sucessos: {sucessos}    :no_entry:  Falhas: {falhas}'''
+    def checar_dado(self, valor_dado):
+        '''
+            Caso explosão esteja ativa, verifica se o valor do dado é
+            igual ao valor máximo possível, se for, rola um dado extra
+            e aplica o mesmo tratamento para esse dado extra.
+        '''
+        if self.explosao:
+            if valor_dado == self.num_lados:
+                rolagem_extra = randint(1, self.num_lados)
+                self.resultados_extra.append(rolagem_extra)
+                self.checar_dado(rolagem_extra)
+        return
+
+    def rolagem(self):
+        '''
+            "Rola" uma quantidade de dados igual ao atributo num_dados,
+            armazena cada resultado no atributo resultados
+        '''
+        if self.valida_num_dados():
+            for dado in range(self.num_dados):
+                valor_dado = randint(1, self.num_lados)
+                self.resultados.append(valor_dado)
+                self.checar_dado(valor_dado)
+
+    def get_resultados(self):
+        '''
+            Retorna mensagem com resultados das rolagens
+        '''
+        self.rolagem()
+        todos_resultados = self.resultados + self.resultados_extra
+        sucessos = sum(map(lambda x: x > 5, todos_resultados))
+        falhas = sum(map(lambda x: x <= 5, todos_resultados))
+        if self.resultados_extra:
+            return (
+                f"ROLANDO {self.num_dados}D{self.num_lados}\n"
+                f"RESULTADOS {self.resultados}\n"
+                f"EXTRAS {self.resultados_extra}\n"
+                f"SUCESSOS {sucessos}\n"
+                f"FALHAS {falhas}\n"
+            )
+        return (
+            f"ROLANDO {self.num_dados}D{self.num_lados}\n"
+            f"RESULTADOS {self.resultados}\n"
+            f"SUCESSOS {sucessos}\n"
+            f"FALHAS {falhas}\n"
+        )
 
 
-# Criar Rolagem
-# Recebe um número inteiro positivo <= 100
-# Retrona uma string com uma mensagem informando o sucesso da rolagem
-def criar_roll(message):
-    dados = int(message.content.lower().split()[1])
-    if dados > 0 and dados <= 15:
-        rolagens = []
-        extras = []
-        ver_ultima_rolagem = True
-        for k in range(dados):
-            if rolagens:
-                while rolagens[-1] == 10 and ver_ultima_rolagem:
-                    extras.append(randint(1, 10))
-                    ver_ultima_rolagem = False
-            if extras:
-                while extras[-1] == 10:
-                    extras.append(randint(1, 10))
-            rolagens.append(randint(1, 10))
-            ver_ultima_rolagem = True
-        if rolagens:
-            while rolagens[-1] == 10 and ver_ultima_rolagem:
-                extras.append(randint(1, 10))
-                ver_ultima_rolagem = False
-        if extras:
-            while extras[-1] == 10:
-                extras.append(randint(1, 10))
-        if extras:
-            return imprime_resultado(rolagens, extras=extras, dados=dados)
-        return imprime_resultado(rolagens, dados=dados)
-    return (
-        ":robot: BOT\n\n"
-        ":speech_balloon: Valor fora dos meus limites! Tente com valores de 1 a 15 :wink:"
-    )
+if __name__ == "__main__":
+    rolagem_teste = Roll(10)
+    print(rolagem_teste.get_resultados())

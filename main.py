@@ -1,9 +1,8 @@
 import os
 import discord
-import asyncio
 # import psycopg2
 
-from funcoes.rolagem import criar_roll
+from funcoes.rolagem import Roll
 from funcoes.utils import comandos, ajuda
 
 # Variaveis com os valores das varieveis de ambiente informados
@@ -31,11 +30,13 @@ async def on_message(message):
         await message.channel.send(ajuda(message.author.name))
     if message.content.lower().startswith('/roll'):
         try:
-            await message.channel.send(criar_roll(message))
+            num_dados = int(message.content.lower().split()[1])
+            rolagem = Roll(num_dados)
+            await message.channel.send(rolagem.get_resultados())
         except ValueError:
             await message.channel.send(
-                ":robot: **BOT**\n\n"
-                ":speech_balloon: Fui projetado para não ser burro igual você!"
+                "**ERROR** :robot:\n"
+                "USUÁRIO SEM CAPACIDADE COGNITIVA DE UTILIZAR UM BOT!"
             )
     if message.content.lower().startswith('/comandos'):
         await message.channel.send(comandos())
